@@ -19,19 +19,13 @@ public class MainRunner
     public static void main(String[] args) throws Exception
     {
         RegistryBuilder builder = new RegistryBuilder();
-
         builder.add(VeganExpeditionModule.class);
-
         Registry registry = builder.build();
-
         registry.performRegistryStartup();
 
-        RecipeAppService recipeAppService = registry.getService(RecipeAppService.class);
-        recipeAppService.test();
+        //DomainEvents.registerEventHandler();
 
-//        DomainEvents.registerEventHandler();
-
-        /*ResourceConfig resourceConfig = new ResourceConfig();
+        ResourceConfig resourceConfig = new ResourceConfig();
         resourceConfig.packages("webapi");
         resourceConfig.register(MultiPartFeature.class);
 
@@ -42,6 +36,7 @@ public class MainRunner
         ResourceHandler staticResourceHandler = new ResourceHandler();
         staticResourceHandler.setResourceBase("./web/");
         ContextHandler staticContextHandler = new ContextHandler("/");
+        staticContextHandler.getInitParams().put("useFileMappedBuffer", "false");
         staticContextHandler.setHandler(staticResourceHandler);
 
         HandlerList handlers = new HandlerList();
@@ -62,6 +57,6 @@ public class MainRunner
         finally
         {
             server.destroy();
-        }*/
+        }
     }
 }
