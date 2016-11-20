@@ -43,7 +43,8 @@ public class MainRunner
         ResourceHandler staticResourceHandler = new ResourceHandler();
         staticResourceHandler.setResourceBase("./web/");
         ContextHandler staticContextHandler = new ContextHandler("/");
-        staticContextHandler.getInitParams().put("useFileMappedBuffer", "false");
+        //staticContextHandler.getInitParams().put("useFileMappedBuffer", "false");
+        staticResourceHandler.setMinMemoryMappedContentLength(-1);
         staticContextHandler.setHandler(staticResourceHandler);
 
         HandlerList handlers = new HandlerList();

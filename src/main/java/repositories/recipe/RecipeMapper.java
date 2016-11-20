@@ -13,7 +13,7 @@ public class RecipeMapper
     public static Recipe toDomainEntity(repositories.entities.Recipe databaseRecipe)
     {
         return new Recipe(
-            UUIDExtensions.fromBytes(databaseRecipe.recipeId),
+            databaseRecipe.recipeId,
             databaseRecipe.name,
             databaseRecipe.description,
             databaseRecipe.prepTime,
@@ -27,7 +27,7 @@ public class RecipeMapper
                 .ingredients
                 .stream()
                 .map(ingredient -> new RecipeIngredient(
-                    UUIDExtensions.fromBytes(ingredient.recipeIngredientId),
+                    ingredient.recipeIngredientId,
                     ingredient.isRequired,
                     ingredient.quantity,
                     ingredient.quantityUnit,
@@ -41,7 +41,7 @@ public class RecipeMapper
                 .instructions
                 .stream()
                 .map(instruction -> new RecipeInstruction(
-                    UUIDExtensions.fromBytes(instruction.recipeInstructionId),
+                    instruction.recipeInstructionId,
                     instruction.stepNumber,
                     instruction.description
                 ))
@@ -60,7 +60,7 @@ public class RecipeMapper
     public static repositories.entities.Recipe toDatabaseEntity(Recipe recipe)
     {
         return new repositories.entities.Recipe(
-            UUIDExtensions.toBytes(recipe.getRecipeId()),
+            recipe.getRecipeId(),
             recipe.getName(),
             recipe.getDescription(),
             recipe.getPrepTime(),
@@ -74,8 +74,8 @@ public class RecipeMapper
                 .getIngredients()
                 .stream()
                 .map(ingredient -> new repositories.entities.RecipeIngredient(
-                    UUIDExtensions.toBytes(ingredient.getRecipeIngredientId()),
-                    UUIDExtensions.toBytes(recipe.getRecipeId()),
+                    ingredient.getRecipeIngredientId(),
+                    recipe.getRecipeId(),
                     ingredient.isRequired(),
                     ingredient.getQuantity(),
                     ingredient.getQuantityUnit(),
@@ -89,8 +89,8 @@ public class RecipeMapper
                 .getInstructions()
                 .stream()
                 .map(instruction -> new repositories.entities.RecipeInstruction(
-                    UUIDExtensions.toBytes(instruction.getRecipeInstructionId()),
-                    UUIDExtensions.toBytes(recipe.getRecipeId()),
+                    instruction.getRecipeInstructionId(),
+                    recipe.getRecipeId(),
                     instruction.getStepNumber(),
                     instruction.getDescription()
                 ))

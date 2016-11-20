@@ -2,13 +2,15 @@ package repositories.entities;
 
 import javax.persistence.*;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "recipe")
 public class Recipe
 {
     @Id
-    public byte[] recipeId;
+    @Column(columnDefinition = "BINARY(16)", length = 16)
+    public UUID recipeId;
 
     @Column
     public String name;
@@ -49,7 +51,7 @@ public class Recipe
     {
     }
 
-    public Recipe(byte[] recipeId, String name, String description, int prepTime, int cookTime, int servings, boolean isVegetarian, boolean isVegan, boolean isPublished, String credit, Set<RecipeIngredient> ingredients, Set<RecipeInstruction> instructions)
+    public Recipe(UUID recipeId, String name, String description, int prepTime, int cookTime, int servings, boolean isVegetarian, boolean isVegan, boolean isPublished, String credit, Set<RecipeIngredient> ingredients, Set<RecipeInstruction> instructions)
     {
         this.recipeId = recipeId;
         this.name = name;

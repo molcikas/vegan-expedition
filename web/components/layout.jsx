@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router'
 
 class Layout extends React.Component {
     render() {
@@ -9,7 +10,7 @@ class Layout extends React.Component {
 			            <div id="menu">
 				            <ul>
 					            <li>
-						            <a href="/recipe">Recipes</a>
+						            <Link to='/recipes'>Recipes</Link>
 					            </li>
 				            </ul>
 			            </div>
@@ -19,8 +20,7 @@ class Layout extends React.Component {
                     {this.props.children}
 	            </div>
                 <div id="footer">
-                    <a href="/Login">Login</a>
-                    <div id="copyright">Vegan Expedition. Copyright 2012. All rights reserved.</div>
+                    <div id="copyright">Vegan Expedition. &copy; {new Date().getFullYear()} Don't Steal This.</div>
                 </div>
             </div>
         )

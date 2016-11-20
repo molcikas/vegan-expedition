@@ -9,6 +9,7 @@ import mainReducer from './reducers'
 
 import layout from './components/layout'
 import recipes from './components/recipes'
+import recipe from './components/recipe'
 
 let store = createStore(mainReducer, applyMiddleware(thunk));
 
@@ -19,6 +20,7 @@ ReactDOM.render((
         <Route path="/" component={layout}>
             <IndexRedirect to="recipes" />
             <Route path="recipes" component={recipes} store={store} baseStyles={baseStyles} />
+            <Route path="recipe/:recipeId" component={recipe} store={store} baseStyles={baseStyles} />
         </Route>
     </Router>
 ), document.getElementById('root'));

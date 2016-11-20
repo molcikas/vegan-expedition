@@ -1,13 +1,10 @@
 /* Tags */
-*
-{
-	font-family: Arial, sans-serif;
-	font-size: 10pt;
-}
 
 body
 {
 	background: #BDC2BE;
+	font-family: Arial, sans-serif;
+	font-size: 10pt;
 }
 
 h1, h2
@@ -89,6 +86,7 @@ ol textarea
 
 
 /* Classes */
+
 .litext
 {
 	color: Black;
@@ -112,6 +110,7 @@ ol textarea
 
 
 /* Master page */
+
 #page-container
 {
     margin: 10px auto;
@@ -194,7 +193,8 @@ ol textarea
 #footer
 {
 	background: white;
-	padding: 5px 10px;
+	height: 8px;
+	padding: 3px 10px 7px 10px;
 	border-top: 1px solid #CCCCCC;
 	font-size: 8pt;
 	-webkit-border-radius: 0 0 5px 5px;
@@ -204,7 +204,13 @@ ol textarea
 
 #copyright
 {
-	display: inline-block;
 	float: right;
-	font-size: 8pt;
 }
+
+/* Recipe page */
+
+#lblDescription { display: block; padding: 5px 0px; }
+#tblStats { margin-bottom: 10px; }
+#tblStats th { border: none; }
+#RecipeCategoriesCell > span:after { content: ", " }
+#RecipeCategoriesCell > span:last-child:after { content: "" }

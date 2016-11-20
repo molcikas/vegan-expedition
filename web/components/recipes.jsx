@@ -4,6 +4,7 @@ import { fetchRecipes } from '../actions'
 import Radium from 'radium'
 
 let store
+let storeUnsubscribe
 let baseStyles
 
 class Recipes extends React.Component {
@@ -14,12 +15,16 @@ class Recipes extends React.Component {
 
         this.onStoreChanged = this.onStoreChanged.bind(this)
 
-        store.subscribe(this.onStoreChanged)
+        storeUnsubscribe = store.subscribe(this.onStoreChanged)
         this.state = store.getState().recipesList;
     }
 
     componentWillMount() {
         store.dispatch(fetchRecipes())
+    }
+
+    componentWillUnmount() {
+        storeUnsubscribe()
     }
 
     onStoreChanged() {
@@ -50,7 +55,6 @@ class Recipes extends React.Component {
                             <th>Vegetarian?</th>
                             <th>Vegan?</th>
                             <th>Servings</th>
-                            <th>Select</th>
                         </tr>
                     </thead>
                     <tbody>

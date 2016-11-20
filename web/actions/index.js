@@ -15,3 +15,20 @@ export const fetchRecipes = () => {
             }))
     }
 }
+
+export const fetchRecipe = (recipeId) => {
+    return function(dispatch) {
+        dispatch({
+            type: 'FETCH_RECIPE',
+            state: 'FETCHING'
+        })
+
+        fetch(`/api/recipes/${recipeId}`)
+            .then(response => response.json())
+            .then(recipe => dispatch({
+                type: 'FETCH_RECIPE',
+                state: 'FETCHED',
+                recipe: recipe
+            }))
+    }
+}

@@ -4,16 +4,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
 @Table(name = "recipeinstruction")
 public class RecipeInstruction
 {
     @Id
-    public byte[] recipeInstructionId;
+    @Column(columnDefinition = "BINARY(16)", length = 16)
+    public UUID recipeInstructionId;
 
-    @Column
-    public byte[] recipeId;
+    @Column(columnDefinition = "BINARY(16)", length = 16)
+    public UUID recipeId;
 
     @Column
     public int stepNumber;
@@ -25,7 +27,7 @@ public class RecipeInstruction
     {
     }
 
-    public RecipeInstruction(byte[] recipeInstructionId, byte[] recipeId, int stepNumber, String description)
+    public RecipeInstruction(UUID recipeInstructionId, UUID recipeId, int stepNumber, String description)
     {
         this.recipeInstructionId = recipeInstructionId;
         this.recipeId = recipeId;
