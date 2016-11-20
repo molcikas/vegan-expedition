@@ -21,7 +21,7 @@ public class RecipeRepository extends AggregateRepository<Recipe, JpaTransaction
 
     public List<Recipe> getAll()
     {
-        List<repositories.entities.Recipe> recipes = entityManager.createQuery("FROM Recipe").getResultList();
+        List<repositories.entities.Recipe> recipes = entityManager.createQuery("FROM Recipe ORDER BY name").getResultList();
 
         return RecipeMapper.toDomainEntities(recipes);
     }

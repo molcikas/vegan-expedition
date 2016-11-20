@@ -1,16 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore } from 'redux'
-import { Router, Route, hashHistory } from 'react-router'
+import { createStore, applyMiddleware  } from 'redux'
+import thunk from 'redux-thunk';
+import { Router, Route, IndexRedirect, Redirect, hashHistory } from 'react-router'
 
 import baseStyles from './baseStyles'
-import App from './components/app'
 import mainReducer from './reducers'
 
-let store = createStore(mainReducer)
+import layout from './components/layout'
+import recipes from './components/recipes'
+
+let store = createStore(mainReducer, applyMiddleware(thunk));
+
+require('./styles/layout.less');
 
 ReactDOM.render((
     <Router history={hashHistory}>
-        <Route path="/" component={App} store={store} baseStyles={baseStyles} />
+        <Route path="/" component={layout}>
+            <IndexRedirect to="recipes" />
+            <Route path="recipes" component={recipes} store={store} baseStyles={baseStyles} />
+        </Route>
     </Router>
 ), document.getElementById('root'));

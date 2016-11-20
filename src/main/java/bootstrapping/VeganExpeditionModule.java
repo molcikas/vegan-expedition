@@ -2,7 +2,9 @@ package bootstrapping;
 
 import applicationservices.RecipeAppService;
 import applicationservices.RecipeAppServiceImpl;
-import applicationservices.UnitOfWorkFactory;
+import ddd.domainevents.DomainEventsRegistration;
+import ddd.domainevents.DomainEventsRegistrationImpl;
+import ddd.persistence.UnitOfWorkFactory;
 import applicationservices.UnitOfWorkFactoryImpl;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.ServiceBuilder;
@@ -27,6 +29,7 @@ public class VeganExpeditionModule
             }
         });
 
+        binder.bind(DomainEventsRegistration.class, DomainEventsRegistrationImpl.class).eagerLoad();
         binder.bind(UnitOfWorkFactory.class, UnitOfWorkFactoryImpl.class).eagerLoad();
         binder.bind(RecipeAppService.class, RecipeAppServiceImpl.class);
     }

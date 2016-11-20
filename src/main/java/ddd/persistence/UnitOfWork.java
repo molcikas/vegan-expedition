@@ -3,7 +3,7 @@ package ddd.persistence;
 import ddd.AggregateRoot;
 import ddd.domainevents.DomainEvent;
 import ddd.domainevents.DomainEventHandler;
-import ddd.domainevents.DomainEvents;
+import ddd.domainevents.DomainEventsRegistration;
 
 import java.io.Closeable;
 import java.lang.reflect.Constructor;
@@ -14,23 +14,17 @@ import java.util.stream.Collectors;
 public class UnitOfWork implements Closeable
 {
     private TransactionContainer transactionContainer;
+    private DomainEventsRegistration domainEventsRegistration;
+
     private List<Repository> repositories;
     private boolean isCommitted = false;
 
-    public UnitOfWork(TransactionContainer transactionContainer)
-    {
-        this(transactionContainer, Collections.emptyList());
-    }
-
-    public <T extends Repository> UnitOfWork(TransactionContainer transactionContainer, Class<T> repositoryClass)
-    {
-        this(transactionContainer, Collections.singletonList(repositoryClass));
-    }
-
-    public <T extends Repository> UnitOfWork(TransactionContainer transactionContainer, List<Class<T>> repositoryClasses)
+    public UnitOfWork(TransactionContainer transactionContainer, DomainEventsRegistration domainEventsRegistration)
     {
         this.transactionContainer = transactionContainer;
-        this.repositories = repositoryClasses.stream().map(this::createRepository).collect(Collectors.toList());
+        this.domainEventsRegistration = domainEventsRegistration;
+
+        this.repositories = new ArrayList<>();
     }
 
     public <T extends Repository> T getRepository(Class<T> repositoryClass)
@@ -81,7 +75,7 @@ public class UnitOfWork implements Closeable
 
         Map<DomainEvent, List<DomainEventHandler>> domainEventsAndHandlers = domainEvents
             .stream()
-            .collect(Collectors.toMap(Function.identity(), DomainEvents::getHandlersForDomainEvent));
+            .collect(Collectors.toMap(Function.identity(), domainEventsRegistration::getHandlersForDomainEvent));
 
         dispatchEventsBeforeCommit(domainEventsAndHandlers);
 

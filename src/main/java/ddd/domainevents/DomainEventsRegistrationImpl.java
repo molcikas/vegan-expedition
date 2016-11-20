@@ -1,20 +1,20 @@
 package ddd.domainevents;
 
-import ddd.persistence.UnitOfWork;
-
 import java.util.*;
 
-public class DomainEvents
+public class DomainEventsRegistrationImpl implements DomainEventsRegistration
 {
-    private static Map<Class, List<DomainEventHandler>> handlers = new HashMap<>();
+    private Map<Class, List<DomainEventHandler>> handlers = new HashMap<>();
 
-    public static List<DomainEventHandler> getHandlersForDomainEvent(DomainEvent event)
+    @Override
+    public List<DomainEventHandler> getHandlersForDomainEvent(DomainEvent event)
     {
         List<DomainEventHandler> handlersForEvent = handlers.get(event.getClass());
         return handlersForEvent != null ? handlersForEvent : Collections.emptyList();
     }
 
-    public static void registerEventHandler(DomainEventHandler eventHandler, Class eventClass)
+    @Override
+    public void registerEventHandler(DomainEventHandler eventHandler, Class eventClass)
     {
         List<DomainEventHandler> existingHandlers = handlers.get(eventClass);
         if(existingHandlers == null)

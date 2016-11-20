@@ -16,14 +16,21 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 public class MainRunner
 {
+    private static Registry registry;
+
+    public static Registry getRegistry()
+    {
+        return registry;
+    }
+
     public static void main(String[] args) throws Exception
     {
         RegistryBuilder builder = new RegistryBuilder();
         builder.add(VeganExpeditionModule.class);
-        Registry registry = builder.build();
+        registry = builder.build();
         registry.performRegistryStartup();
 
-        //DomainEvents.registerEventHandler();
+        //DomainEventsRegistration.registerEventHandler();
 
         ResourceConfig resourceConfig = new ResourceConfig();
         resourceConfig.packages("webapi");

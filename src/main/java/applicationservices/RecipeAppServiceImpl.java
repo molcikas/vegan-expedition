@@ -1,10 +1,8 @@
 package applicationservices;
 
 import aggregates.recipe.Recipe;
-import bootstrapping.VeganExpeditionModule;
 import ddd.persistence.UnitOfWork;
-import org.apache.tapestry5.ioc.Registry;
-import org.apache.tapestry5.ioc.RegistryBuilder;
+import ddd.persistence.UnitOfWorkFactory;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import repositories.recipe.RecipeRepository;
 
@@ -15,15 +13,12 @@ public class RecipeAppServiceImpl implements RecipeAppService
     @Inject
     private UnitOfWorkFactory unitOfWorkFactory;
 
-    public void test()
+    public List<Recipe> getAll()
     {
         try(UnitOfWork unitOfWork = unitOfWorkFactory.create())
         {
             RecipeRepository recipeRepository = unitOfWork.getRepository(RecipeRepository.class);
-
-            List<Recipe> recipes = recipeRepository.getAll();
-
-            System.out.println(recipes);
+            return recipeRepository.getAll();
         }
     }
 }

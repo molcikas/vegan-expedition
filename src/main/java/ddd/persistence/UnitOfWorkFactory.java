@@ -1,4 +1,4 @@
-package applicationservices;
+package ddd.persistence;
 
 import ddd.persistence.UnitOfWork;
 

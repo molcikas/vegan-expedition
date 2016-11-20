@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux'
-import testReducer from './testReducer'
+import recipesList from './recipesList'
 
 const mainReducer = combineReducers({
-    testReducer
+    recipesList
 })
 
 export default mainReducer

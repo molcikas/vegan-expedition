@@ -1,14 +1,15 @@
 var initialState = {
-    count: 0
+    recipesFetchState: 'NOT_FETCHED',
+    recipes: []
 }
 
 const store = (state = initialState, action) => {
     switch (action.type) {
-        case 'INCREMENT_COUNT':
+        case 'FETCH_RECIPES':
             return Object.assign({}, state, {
-                count: state.count + 1
+                recipesFetchState: action.state,
+                recipes: action.recipes ? action.recipes : []
             })
-            break;
         default:
             return state
     }
