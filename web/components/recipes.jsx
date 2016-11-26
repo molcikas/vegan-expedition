@@ -14,6 +14,7 @@ class Recipes extends React.Component {
         baseStyles = props.route.baseStyles
 
         this.onStoreChanged = this.onStoreChanged.bind(this)
+        this.deleteRecipe = this.deleteRecipe.bind(this)
 
         storeUnsubscribe = store.subscribe(this.onStoreChanged)
         this.state = store.getState().recipesList;
@@ -31,6 +32,13 @@ class Recipes extends React.Component {
         this.setState(store.getState().recipesList)
     }
 
+    deleteRecipe(event, recipe) {
+        event.preventDefault()
+        if(confirm(`Are you sure you want to delete ${recipe.name}?`)) {
+            alert('TODO: DELETE')
+        }
+    }
+
     render() {
         if(this.state.recipesFetchState === 'FETCHING') {
             return <div></div>
@@ -38,13 +46,16 @@ class Recipes extends React.Component {
 
         var recipeRows = this.state.recipes.map((recipe) => (
             <tr key={recipe.recipeId}>
-                <td><Link to={`/recipe/${recipe.recipeId}`}>{recipe.name}</Link></td>
+                <td><Link to={`/recipes/${recipe.recipeId}`}>{recipe.name}</Link></td>
                 <td>{recipe.vegetarian ? 'Yes' : 'No'}</td>
                 <td>{recipe.vegan ? 'Yes' : 'No'}</td>
                 <td>{recipe.servings}</td>
-                <td><input type="checkbox" value={`recipe:${recipe.recipeId}`} /></td>
+                <td>
+                    <Link to={`/recipes/${recipe.recipeId}/edit`} style={ingredientChangeLinkStyle} title="Edit">&#8601;</Link>
+                    <a href="" onClick={(e) => this.deleteRecipe(e, recipe)} style={ingredientChangeLinkStyle} title="Delete">X</a>
+                </td>
             </tr>
-        ));
+        ))
 
         return (
             <div>
@@ -55,15 +66,24 @@ class Recipes extends React.Component {
                             <th>Vegetarian?</th>
                             <th>Vegan?</th>
                             <th>Servings</th>
+                            <th>Edit</th>
                         </tr>
                     </thead>
                     <tbody>
                         {recipeRows}
                     </tbody>
                 </table>
+                <Link to="/recipes/add" onClick={this.addRecipe}>Add Recipe</Link>
             </div>
         )
     }
+}
+
+const ingredientChangeLinkStyle = {
+    textDecoration: 'none',
+    fontSize: '16pt',
+    paddingRight: '6px',
+    verticalAlign: 'middle'
 }
 
 export default Radium(Recipes)

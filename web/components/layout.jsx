@@ -20,7 +20,7 @@ class Layout extends React.Component {
                     {this.props.children}
 	            </div>
                 <div id="footer">
-                    <div id="copyright">Vegan Expedition. &copy; {new Date().getFullYear()} Don't Steal This.</div>
+                    <div id="copyright">&copy; {new Date().getFullYear()} Vegan Expedition.</div>
                 </div>
             </div>
         )
