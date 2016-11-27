@@ -1,5 +1,6 @@
 package aggregates.recipe;
 
+import applicationservices.viewmodels.RecipeIngredientViewModel;
 import ddd.exceptions.IllegalNegativeArgumentForDomainException;
 import ddd.exceptions.IllegalNullArgumentForDomainException;
 import ddd.exceptions.IllegalNullOrEmptyArgumentForDomainException;
@@ -65,6 +66,20 @@ public class RecipeIngredient
         return orderBy;
     }
 
+    public RecipeIngredient(RecipeIngredientViewModel recipeIngredientViewModel)
+    {
+        this(
+            UUID.randomUUID(),
+            recipeIngredientViewModel.isRequired,
+            recipeIngredientViewModel.quantity,
+            recipeIngredientViewModel.quantityUnit,
+            recipeIngredientViewModel.quantityDetail,
+            recipeIngredientViewModel.name,
+            recipeIngredientViewModel.preparation,
+            0
+        );
+    }
+
     public RecipeIngredient(UUID recipeIngredientId, boolean isRequired, Double quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
     {
         if(recipeIngredientId == null)
@@ -87,6 +102,11 @@ public class RecipeIngredient
         this.quantityDetail = quantityDetail;
         this.name = name;
         this.preparation = preparation;
+        this.orderBy = orderBy;
+    }
+
+    void normalizeOrderBy(int orderBy)
+    {
         this.orderBy = orderBy;
     }
 }

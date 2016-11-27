@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
-import { fetchRecipes } from '../actions'
+import { fetchRecipes, deleteRecipe } from '../actions'
 import Radium from 'radium'
 
 let store
@@ -35,7 +35,7 @@ class Recipes extends React.Component {
     deleteRecipe(event, recipe) {
         event.preventDefault()
         if(confirm(`Are you sure you want to delete ${recipe.name}?`)) {
-            alert('TODO: DELETE')
+            store.dispatch(deleteRecipe(recipe.recipeId))
         }
     }
 

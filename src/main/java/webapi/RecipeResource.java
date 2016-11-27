@@ -1,8 +1,11 @@
 package webapi;
 
-import aggregates.recipe.Recipe;
 import applicationservices.RecipeAppService;
+import applicationservices.RecipeAppServiceImpl;
+import applicationservices.viewmodels.RecipeViewModel;
 import bootstrapping.MainRunner;
+import ddd.persistence.UnitOfWorkFactory;
+import webapi.viewmodels.RecipeIdOnly;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -13,15 +16,18 @@ import java.util.UUID;
 @Path("api/recipes")
 public class RecipeResource
 {
+    private RecipeAppService getRecipeAppService()
+    {
+        // TODO: Figure out how to integrate tapestry IOC with jersey so we don't have to do this.
+        return new RecipeAppServiceImpl(MainRunner.getRegistry().getService(UnitOfWorkFactory.class));
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll()
     {
-        // TODO: Figure out how to integrate tapestry IOC with jersey so we don't have to do this.
-        RecipeAppService recipeAppService = MainRunner.getRegistry().getService(RecipeAppService.class);
-
-        List<Recipe> recipes = recipeAppService.getAll();
+        RecipeAppService recipeAppService = getRecipeAppService();
+        List<RecipeViewModel> recipes = recipeAppService.getAll();
 
         return Response
             .status(Response.Status.OK)
@@ -34,10 +40,8 @@ public class RecipeResource
     @Produces(MediaType.APPLICATION_JSON)
     public Response getRecipe(@PathParam("recipeId") String recipeId)
     {
-        // TODO: Figure out how to integrate tapestry IOC with jersey so we don't have to do this.
-        RecipeAppService recipeAppService = MainRunner.getRegistry().getService(RecipeAppService.class);
-
-        Recipe recipe = recipeAppService.getRecipe(UUID.fromString(recipeId));
+        RecipeAppService recipeAppService = getRecipeAppService();
+        RecipeViewModel recipe = recipeAppService.getRecipe(UUID.fromString(recipeId));
 
         if(recipe == null)
         {
@@ -47,6 +51,43 @@ public class RecipeResource
         return Response
             .status(Response.Status.OK)
             .entity(recipe)
+            .build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addRecipe(RecipeViewModel recipeViewModel)
+    {
+        RecipeAppService recipeAppService = getRecipeAppService();
+        UUID recipeId = recipeAppService.addRecipe(recipeViewModel);
+
+        return Response
+            .status(Response.Status.OK)
+            .entity(new RecipeIdOnly(recipeId))
+            .build();
+    }
+
+    @PUT
+    @Path("/{recipeId}")
+    public Response updateRecipe(@PathParam("recipeId") String recipeId, RecipeViewModel recipeViewModel)
+    {
+        RecipeAppService recipeAppService = getRecipeAppService();
+        recipeAppService.updateRecipe(recipeViewModel);
+
+        return Response
+            .status(Response.Status.OK)
+            .build();
+    }
+
+    @DELETE
+    @Path("/{recipeId}")
+    public Response delete(@PathParam("recipeId") String recipeId)
+    {
+        RecipeAppService recipeAppService = getRecipeAppService();
+        recipeAppService.delete(UUID.fromString(recipeId));
+
+        return Response
+            .status(Response.Status.OK)
             .build();
     }
 }

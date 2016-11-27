@@ -29,8 +29,8 @@ public class VeganExpeditionModule
             }
         });
 
-        binder.bind(DomainEventsRegistration.class, DomainEventsRegistrationImpl.class).eagerLoad();
-        binder.bind(UnitOfWorkFactory.class, UnitOfWorkFactoryImpl.class).eagerLoad();
+        binder.bind(DomainEventsRegistration.class, DomainEventsRegistrationImpl.class);
+        binder.bind(UnitOfWorkFactory.class, UnitOfWorkFactoryImpl.class);
         binder.bind(RecipeAppService.class, RecipeAppServiceImpl.class);
     }
 }

@@ -1,5 +1,6 @@
 package aggregates.recipe;
 
+import applicationservices.viewmodels.RecipeInstructionViewModel;
 import ddd.exceptions.IllegalNegativeArgumentForDomainException;
 import ddd.exceptions.IllegalNullArgumentForDomainException;
 import ddd.exceptions.IllegalNullOrEmptyArgumentForDomainException;
@@ -30,6 +31,15 @@ public class RecipeInstruction
         return description;
     }
 
+    public RecipeInstruction(RecipeInstructionViewModel recipeInstructionViewModel)
+    {
+        this(
+            UUID.randomUUID(),
+            0,
+            recipeInstructionViewModel.description
+        );
+    }
+
     public RecipeInstruction(UUID recipeInstructionId, int stepNumber, String description)
     {
         if(recipeInstructionId == null)
@@ -48,5 +58,10 @@ public class RecipeInstruction
         this.recipeInstructionId = recipeInstructionId;
         this.stepNumber = stepNumber;
         this.description = description;
+    }
+
+    void normalizeStepNumber(int stepNumber)
+    {
+        this.stepNumber = stepNumber;
     }
 }

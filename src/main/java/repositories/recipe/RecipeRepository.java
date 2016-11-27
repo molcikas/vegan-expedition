@@ -3,11 +3,8 @@ package repositories.recipe;
 import aggregates.recipe.Recipe;
 import ddd.persistence.AggregateRepository;
 import ddd.persistence.JpaTransactionContainer;
-import ddd.persistence.UUIDExtensions;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +17,32 @@ public class RecipeRepository extends AggregateRepository<Recipe, JpaTransaction
     {
         super(transactionContainer);
         this.entityManager = transactionContainer.getEntityManager();
+    }
+
+    @Override
+    public void add(Recipe recipe)
+    {
+        repositories.entities.Recipe recipeEntity = RecipeMapper.toDatabaseEntity(recipe);
+        entityManager.merge(recipeEntity);
+        super.add(recipe);
+    }
+
+    @Override
+    public void update(Recipe recipe)
+    {
+        repositories.entities.Recipe recipeEntity = RecipeMapper.toDatabaseEntity(recipe);
+        entityManager.merge(recipeEntity);
+        super.update(recipe);
+    }
+
+    public void delete(UUID recipeId)
+    {
+        repositories.entities.Recipe recipeEntity = entityManager
+            .createQuery("FROM Recipe WHERE recipeId = :recipeId", repositories.entities.Recipe.class)
+            .setParameter("recipeId", recipeId)
+            .getResultList()
+            .get(0);
+        entityManager.remove(recipeEntity);
     }
 
     public List<Recipe> getAll()

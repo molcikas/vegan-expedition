@@ -1,12 +1,15 @@
 package applicationservices;
 
-import aggregates.recipe.Recipe;
+import applicationservices.viewmodels.RecipeViewModel;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface RecipeAppService
 {
-    List<Recipe> getAll();
-    Recipe getRecipe(UUID recipeId);
+    List<RecipeViewModel> getAll();
+    RecipeViewModel getRecipe(UUID recipeId);
+    UUID addRecipe(RecipeViewModel recipeViewModel);
+    void updateRecipe(RecipeViewModel recipeViewModel);
+    void delete(UUID recipeId);
 }

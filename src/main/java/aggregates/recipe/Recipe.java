@@ -1,7 +1,7 @@
 package aggregates.recipe;
 
+import applicationservices.viewmodels.RecipeViewModel;
 import ddd.AggregateRoot;
-import ddd.exceptions.IllegalArgumentForDomainException;
 import ddd.exceptions.IllegalNegativeArgumentForDomainException;
 import ddd.exceptions.IllegalNullArgumentForDomainException;
 import ddd.exceptions.IllegalNullOrEmptyArgumentForDomainException;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Recipe extends AggregateRoot
 {
@@ -98,6 +99,34 @@ public class Recipe extends AggregateRoot
         return Collections.unmodifiableList(instructions);
     }
 
+    public Recipe(RecipeViewModel recipeViewModel)
+    {
+        this(
+            recipeViewModel.recipeId != null ? recipeViewModel.recipeId : UUID.randomUUID(),
+            recipeViewModel.name,
+            recipeViewModel.description,
+            recipeViewModel.prepTime,
+            recipeViewModel.cookTime,
+            recipeViewModel.servings,
+            recipeViewModel.isVegetarian,
+            recipeViewModel.isVegan,
+            recipeViewModel.isPublished,
+            recipeViewModel.credit,
+            recipeViewModel
+                .ingredients
+                .stream()
+                .map(RecipeIngredient::new)
+                .collect(Collectors.toList()),
+            recipeViewModel
+                .instructions
+                .stream()
+                .map(RecipeInstruction::new)
+                .collect(Collectors.toList())
+        );
+
+        normalizeSortIndexes();
+    }
+
     public Recipe(UUID recipeId, String name, String description, int prepTime, int cookTime, int servings, boolean isVegetarian, boolean isVegan, boolean isPublished, String credit, List<RecipeIngredient> ingredients, List<RecipeInstruction> instructions)
     {
         if(recipeId == null)
@@ -133,5 +162,18 @@ public class Recipe extends AggregateRoot
         this.credit = credit;
         this.ingredients = new ArrayList<>(ingredients);
         this.instructions = new ArrayList<>(instructions);
+    }
+
+    private void normalizeSortIndexes()
+    {
+        for(int i = 0; i < this.ingredients.size(); i++)
+        {
+            this.ingredients.get(i).normalizeOrderBy(i);
+        }
+
+        for(int i = 0; i < this.instructions.size(); i++)
+        {
+            this.instructions.get(i).normalizeStepNumber(i + 1);
+        }
     }
 }

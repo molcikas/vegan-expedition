@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
-import { fetchRecipe } from '../actions'
+import { fetchRecipe, addRecipe, updateRecipe } from '../actions'
 import Radium from 'radium'
 
 const indexRegex = /\[([0-9]+)\]/
@@ -31,14 +31,10 @@ class RecipeEdit extends React.Component {
 
     componentWillMount() {
         if(this.state.creatingNew) {
-            this.state.recipeFetchState === 'FETCHED'
+            this.state.recipeFetchState = 'FETCHED'
             this.state.recipe = {
-                ingredients: [{
-                    orderBy: 0
-                }],
-                instructions: [{
-                    stepNumber: 0
-                }]
+                ingredients: [{}],
+                instructions: [{}]
             }
             this.setState(this.state)
         }
@@ -52,7 +48,11 @@ class RecipeEdit extends React.Component {
     }
 
     onStoreChanged() {
-        this.setState(store.getState().recipe)
+        let newState = Object.assign({}, this.state, store.getState().recipe)
+        if(newState.recipeFetchState === 'ADDED' || newState.recipeFetchState === 'UPDATED') {
+            this.props.history.push(`/recipes/${newState.recipe.recipeId}`)
+        }
+        this.setState(newState)
     }
 
     updateRecipeProperty(event) {
@@ -79,9 +79,7 @@ class RecipeEdit extends React.Component {
 
     addIngredient(event) {
         event.preventDefault()
-        this.state.recipe.ingredients.push({
-            orderBy: this.state.recipe.ingredients.length
-        })
+        this.state.recipe.ingredients.push({})
         this.setState(this.state)
     }
 
@@ -93,7 +91,6 @@ class RecipeEdit extends React.Component {
         let ingredient = this.state.recipe.ingredients[i]
         this.state.recipe.ingredients.splice(i, 1)
         this.state.recipe.ingredients.splice(moveUp ? i - 1 : i + 1, 0, ingredient)
-        this.state.recipe.ingredients.forEach((ing, i) => ing.orderBy = i)
         this.setState(this.state)
     }
 
@@ -111,16 +108,18 @@ class RecipeEdit extends React.Component {
 
     addInstruction(event) {
         event.preventDefault()
-        this.state.recipe.instructions.push({
-            stepNumber: this.state.recipe.instructions.length,
-            description: ''
-        })
+        this.state.recipe.instructions.push({})
         this.setState(this.state)
     }
 
     formSubmitted(event) {
         event.preventDefault()
-        // TODO: Implement
+        if(this.state.creatingNew) {
+            store.dispatch(addRecipe(this.state.recipe))
+        }
+        else {
+            store.dispatch(updateRecipe(this.state.recipe))
+        }
     }
 
     render() {
