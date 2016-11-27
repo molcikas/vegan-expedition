@@ -1,11 +1,12 @@
 var path = require('path')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: ['whatwg-fetch', './index'],
   output: {
     path: path.resolve('./bundle/'),
-    publicPath: '/bundle/',
+    publicPath: '/',
     filename: '[name].bundle.js'
   },
   devtool: 'source-map',
@@ -32,7 +33,8 @@ module.exports = {
     }
   ]},
   plugins: [
-    new ExtractTextPlugin("/styles/[name].css")
+    new ExtractTextPlugin('/styles/[name].css'),
+    new CopyWebpackPlugin([{ from: 'index.html', to: 'index.html' }])
   ],
   resolve: {
     extensions: ['', '.js', '.jsx']

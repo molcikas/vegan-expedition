@@ -41,9 +41,8 @@ public class MainRunner
         servletContextHandler.addServlet(servletHolder, "/*");
 
         ResourceHandler staticResourceHandler = new ResourceHandler();
-        staticResourceHandler.setResourceBase("./web/");
+        staticResourceHandler.setResourceBase("./src/main/webapp/bundle");
         ContextHandler staticContextHandler = new ContextHandler("/");
-        //staticContextHandler.getInitParams().put("useFileMappedBuffer", "false");
         staticResourceHandler.setMinMemoryMappedContentLength(-1);
         staticContextHandler.setHandler(staticResourceHandler);
 
