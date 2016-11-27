@@ -8,6 +8,7 @@
   },
   "scripts": {
     "watch": "webpack --progress --colors --watch",
+    "dist": "webpack --progress --colors --config webpack.config.dist.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
