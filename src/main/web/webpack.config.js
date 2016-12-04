@@ -5,7 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 module.exports = {
   entry: ['whatwg-fetch', './index'],
   output: {
-    path: path.resolve('./bundle/'),
+    path: path.resolve('../webapp/'),
     publicPath: '/',
     filename: '[name].bundle.js'
   },

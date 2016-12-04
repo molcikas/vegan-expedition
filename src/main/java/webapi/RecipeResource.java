@@ -4,6 +4,7 @@ import applicationservices.RecipeAppService;
 import applicationservices.RecipeAppServiceImpl;
 import applicationservices.viewmodels.RecipeViewModel;
 import bootstrapping.MainRunner;
+import bootstrapping.RegistryContainer;
 import ddd.persistence.UnitOfWorkFactory;
 import webapi.viewmodels.RecipeIdOnly;
 
@@ -13,13 +14,13 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 
-@Path("api/recipes")
+@Path("recipes")
 public class RecipeResource
 {
     private RecipeAppService getRecipeAppService()
     {
         // TODO: Figure out how to integrate tapestry IOC with jersey so we don't have to do this.
-        return new RecipeAppServiceImpl(MainRunner.getRegistry().getService(UnitOfWorkFactory.class));
+        return new RecipeAppServiceImpl(RegistryContainer.getRegistry().getService(UnitOfWorkFactory.class));
     }
 
     @GET
