@@ -187,11 +187,11 @@ class RecipeEdit extends React.Component {
                         </tr>
                         <tr>
                             <th><label htmlFor="IsVegetarian">Vegetarian?</label></th>
-                            <td><input type="checkbox" name="vegetarian" checked={this.state.recipe.vegetarian} min="0" max="1000" onChange={this.updateRecipeProperty} /></td>
+                            <td><input type="checkbox" name="isVegetarian" checked={this.state.recipe.isVegetarian} min="0" max="1000" onChange={this.updateRecipeProperty} /></td>
                         </tr>
                         <tr>
                             <th><label htmlFor="IsVegan">Vegan?</label></th>
-                            <td><input type="checkbox" name="vegan" checked={this.state.recipe.vegan} min="0" max="1000" onChange={this.updateRecipeProperty} /></td>
+                            <td><input type="checkbox" name="isVegan" checked={this.state.recipe.isVegan} min="0" max="1000" onChange={this.updateRecipeProperty} /></td>
                         </tr>
                     </tbody>
                 </table>

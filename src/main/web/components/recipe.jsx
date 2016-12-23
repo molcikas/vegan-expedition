@@ -77,11 +77,11 @@ class Recipe extends React.Component {
                         </tr>
                         <tr>
                             <th><label htmlFor="IsVegetarian">Vegetarian?</label></th>
-                            <td>{this.state.recipe.vegetarian ? 'Yes' : 'No'}</td>
+                            <td>{this.state.recipe.isVegetarian ? 'Yes' : 'No'}</td>
                         </tr>
                         <tr>
                             <th><label htmlFor="IsVegan">Vegan?</label></th>
-                            <td>{this.state.recipe.vegan ? 'Yes' : 'No'}</td>
+                            <td>{this.state.recipe.isVegan ? 'Yes' : 'No'}</td>
                         </tr>
                     </tbody>
                 </table>

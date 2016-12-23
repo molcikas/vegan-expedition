@@ -11,15 +11,8 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 public class MainRunner
 {
-
-
     public static void main(String[] args) throws Exception
     {
-        // TODO: Is it possible to have jetty invoke VeganExpeditionContextInit?
-        RegistryContainer.initRegistry();
-
-        //DomainEventsRegistration.registerEventHandler();
-
         ServletHolder servletHolder = new ServletHolder(new ServletContainer(new VeganExpeditionJerseyApp()));
         ServletContextHandler servletContextHandler = new ServletContextHandler();
         servletContextHandler.addServlet(servletHolder, "/api/*");

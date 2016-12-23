@@ -9,6 +9,8 @@ import applicationservices.UnitOfWorkFactoryImpl;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.ServiceBuilder;
 import org.apache.tapestry5.ioc.ServiceResources;
+import webapi.RecipeResource;
+import webapi.RecipeResourceImpl;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -32,5 +34,6 @@ public class VeganExpeditionModule
         binder.bind(DomainEventsRegistration.class, DomainEventsRegistrationImpl.class);
         binder.bind(UnitOfWorkFactory.class, UnitOfWorkFactoryImpl.class);
         binder.bind(RecipeAppService.class, RecipeAppServiceImpl.class);
+        binder.bind(RecipeResource.class, RecipeResourceImpl.class);
     }
 }

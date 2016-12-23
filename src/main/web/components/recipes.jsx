@@ -47,8 +47,8 @@ class Recipes extends React.Component {
         var recipeRows = this.state.recipes.map((recipe) => (
             <tr key={recipe.recipeId}>
                 <td><Link to={`/recipes/${recipe.recipeId}`}>{recipe.name}</Link></td>
-                <td>{recipe.vegetarian ? 'Yes' : 'No'}</td>
-                <td>{recipe.vegan ? 'Yes' : 'No'}</td>
+                <td>{recipe.isVegetarian ? 'Yes' : 'No'}</td>
+                <td>{recipe.isVegan ? 'Yes' : 'No'}</td>
                 <td>{recipe.servings}</td>
                 <td>
                     <Link to={`/recipes/${recipe.recipeId}/edit`} style={ingredientChangeLinkStyle} title="Edit">&#8601;</Link>
