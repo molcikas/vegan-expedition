@@ -42,9 +42,9 @@ public class RecipeIngredient
     {
     }
 
-    public RecipeIngredient(UUID recipeIngredientId, UUID recipeId, boolean isRequired, Double quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
+    public RecipeIngredient(UUID recipeId, boolean isRequired, Double quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
     {
-        this.recipeIngredientId = recipeIngredientId;
+        this.recipeIngredientId = UUID.randomUUID();
         this.recipeId = recipeId;
         this.isRequired = isRequired;
         this.quantity = quantity;

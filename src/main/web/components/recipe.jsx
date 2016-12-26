@@ -36,7 +36,7 @@ class Recipe extends React.Component {
             return <div></div>
         }
 
-        let ingredientsList = this.state.recipe.ingredients.map((ing) => {
+        let ingredientsList = this.state.recipe.ingredients.map((ing, i) => {
             let text = getQuantityString(ing.quantity) +
                 (ing.quantityDetail ? ing.quantityDetail + ' ' : '') + 
                 getQuantityUnit(ing.quantityUnit, ing.quantity) + 
@@ -45,12 +45,12 @@ class Recipe extends React.Component {
             text = text.trim()
             text = text[0].toUpperCase() + text.substring(1)
             return (
-                <li key={ing.recipeIngredientId} className="litext">{text}</li>
+                <li key={i} className="litext">{text}</li>
             )
         })
 
-        let instructionsList = this.state.recipe.instructions.map((ins) => 
-            <li key={ins.recipeInstructionId} className="litext">{ins.description}</li>
+        let instructionsList = this.state.recipe.instructions.map((ins, i) => 
+            <li key={i} className="litext">{ins.description}</li>
         )
 
         return (

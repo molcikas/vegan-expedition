@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router'
-import { fetchRecipe, addRecipe, updateRecipe } from '../actions'
 import Radium from 'radium'
 
-const indexRegex = /\[([0-9]+)\]/
+import { fetchRecipe, addRecipe, updateRecipe } from '../actions'
+import InputNumber from './input-number'
 
 let store
 let storeUnsubscribe
@@ -18,14 +18,20 @@ class RecipeEdit extends React.Component {
         this.onStoreChanged = this.onStoreChanged.bind(this)
         this.updateRecipeProperty = this.updateRecipeProperty.bind(this)
         this.updateIngredient = this.updateIngredient.bind(this)
+        this.updateRecipePropertyAndValidity = this.updateRecipePropertyAndValidity.bind(this)
         this.addIngredient = this.addIngredient.bind(this)
         this.moveIngredient = this.moveIngredient.bind(this)
         this.deleteIngredient = this.deleteIngredient.bind(this)
         this.updateInstruction = this.updateInstruction.bind(this)
         this.addInstruction = this.addInstruction.bind(this)
+        this.formSubmitted = this.formSubmitted.bind(this)
+        this.validate = this.validate.bind(this)
 
         storeUnsubscribe = store.subscribe(this.onStoreChanged)
-        this.state = store.getState().recipe
+        this.state = {
+            recipe: store.getState().recipe,
+            errors: {}
+        }
         this.state.creatingNew = !!!props.params.recipeId
     }
 
@@ -61,6 +67,18 @@ class RecipeEdit extends React.Component {
         }
         else {
             this.state.recipe[event.target.name] = event.target.value
+            this.validate()
+        }
+        this.setState(this.state)
+    }
+
+    updateRecipePropertyAndValidity(updateEvent) {
+        this.state.recipe[updateEvent.name] = updateEvent.value
+        if(updateEvent.isValid) {
+            delete this.state.errors[updateEvent.name]
+        }
+        else {
+            this.state.errors[updateEvent.name] = this.state.errors[updateEvent.name] || getErrorMessage(updateEvent.name)
         }
         this.setState(this.state)
     }
@@ -114,6 +132,12 @@ class RecipeEdit extends React.Component {
 
     formSubmitted(event) {
         event.preventDefault()
+        this.validate()
+        if(Object.keys(this.state.errors).length) {
+            Object.keys(this.state.errors).forEach(field => this.state.errors[field].presentBeforeFormSubmit = true)
+            this.setState(this.state)
+            return
+        }
         if(this.state.creatingNew) {
             store.dispatch(addRecipe(this.state.recipe))
         }
@@ -122,13 +146,35 @@ class RecipeEdit extends React.Component {
         }
     }
 
+    validate() {
+        if(!this.state.recipe.name) {
+            this.state.errors.name = this.state.errors.name || getErrorMessage('name')
+        }
+        else {
+            delete this.state.errors.name
+        }
+        if(!this.state.recipe.description) {
+            this.state.errors.description = this.state.errors.description || getErrorMessage('description')
+        }
+        else {
+            delete this.state.errors.description
+        }
+        if(this.state.recipe.instructions.filter(ins => ins.description).length === 0) {
+            this.state.errors.instructions = this.state.errors.instructions || getErrorMessage('instructions')
+        }
+        else {
+            delete this.state.errors.instructions
+        }
+        this.setState(this.state)
+    }
+
     render() {
         if(this.state.recipeFetchState === 'FETCHING') {
             return <div></div>
         }
 
         let ingredientsList = this.state.recipe.ingredients.map((ing, i) => (
-            <tr key={ing.recipeIngredientId}>
+            <tr key={i}>
                 <td>
                     <a href="" onClick={(e) => this.moveIngredient(e, i, true)} style={ingredientChangeLinkStyle} title="Move Up">&#8593;</a>
                     <a href="" onClick={(e) => this.moveIngredient(e, i, false)} style={ingredientChangeLinkStyle} title="Move Down">&#8595;</a>
@@ -159,13 +205,20 @@ class RecipeEdit extends React.Component {
                 <td><input type="checkbox" name="{`ingredients[${i}].required`}" defaultChecked={ing.required} /></td>
             </tr>
         ))
-        ingredientsList.push(<tr><td colSpan="7"><a href="" onClick={this.addIngredient}>Add Ingredient</a></td></tr>)
+        ingredientsList.push(<tr key={ingredientsList.length}><td colSpan="7"><a href="" onClick={this.addIngredient}>Add Ingredient</a></td></tr>)
 
         let instructionsList = this.state.recipe.instructions.map((ins, i) => 
-            <li key={ins.recipeInstructionId} className="litext">
+            <li key={i} className="litext">
                 <textarea rows="4" cols="80" name={`instruction[${i}]`} value={ins.description} onChange={this.updateInstruction}></textarea>
             </li>
         )
+
+        let errorList = Object.keys(this.state.errors)
+            .sort((x, y) => parseInt(this.state.errors[x].order) - parseInt(this.state.errors[y].order))
+            .filter(field => this.state.errors[field].presentBeforeFormSubmit)
+            .map((field, i) => 
+                <li key={i}>{this.state.errors[field].message}</li>
+            )
 
         return (
             <form onSubmit={(...args) => this.formSubmitted(...args)}>
@@ -175,15 +228,15 @@ class RecipeEdit extends React.Component {
                     <tbody>
                         <tr>
                             <th><label htmlFor="PrepTime">Prep Time</label>:</th>
-                            <td><input type="number" name="prepTime" value={this.state.recipe.prepTime} style={textboxStyle} min="0" max="1000" onChange={this.updateRecipeProperty} /> minutes</td>
+                            <td><InputNumber name="prepTime" value={this.state.recipe.prepTime} style={textboxStyle} min="0" max="1000" onChange={this.updateRecipePropertyAndValidity} /> minutes</td>
                         </tr>
                         <tr>
                             <th><label htmlFor="CookTime">Cook Time</label>:</th>
-                            <td><input type="number" name="cookTime" value={this.state.recipe.cookTime} style={textboxStyle} min="0" max="1000" onChange={this.updateRecipeProperty} /> minutes</td>
+                            <td><InputNumber name="cookTime" value={this.state.recipe.cookTime} style={textboxStyle} min="0" max="1000" onChange={this.updateRecipePropertyAndValidity} /> minutes</td>
                         </tr>
                         <tr>
                             <th><label htmlFor="Servings">Servings</label>:</th>
-                            <td><input type="number" name="servings" value={this.state.recipe.servings} style={textboxStyle} min="0" max="1000" onChange={this.updateRecipeProperty} /></td>
+                            <td><InputNumber name="servings" value={this.state.recipe.servings} style={textboxStyle} min="0" max="1000" onChange={this.updateRecipePropertyAndValidity} /></td>
                         </tr>
                         <tr>
                             <th><label htmlFor="IsVegetarian">Vegetarian?</label></th>
@@ -220,12 +273,57 @@ class RecipeEdit extends React.Component {
                     <a href="" onClick={this.addInstruction}>Add Step</a>
                 </div>
                 <input type="submit" value={this.state.creatingNew ? 'Create' : 'Update'} />
+                <div style={errorList.length ? {} : {display: 'none'}}>
+                    <h2>There are some problems with this recipe. Please fix them and try saving again.</h2>
+                    <ul>
+                        {errorList}
+                    </ul>
+                </div>
 	        </form>
         )
     }
 }
 
 export default Radium(RecipeEdit)
+
+function getErrorMessage(name) {
+    return Object.assign({}, errorMessages[name])
+}
+
+const indexRegex = /\[([0-9]+)\]/
+
+const errorMessages = {
+    name: {
+        message: 'A name is required.',
+        order: 0,
+        presentBeforeFormSubmit: false
+    },
+    description: {
+        message: 'A description is required.',
+        order: 1,
+        presentBeforeFormSubmit: false
+    },
+    prepTime: {
+        message: 'Prep time must be between 0 and 1000.',
+        order: 2,
+        presentBeforeFormSubmit: false
+    },
+    cookTime: {
+        message: 'Cook time must be between 0 and 1000.',
+        order: 3,
+        presentBeforeFormSubmit: false
+    },
+    servings: {
+        message: 'Servings must be between 0 and 1000.',
+        order: 4,
+        presentBeforeFormSubmit: false
+    },
+    instructions: {
+        message: 'Instructions are required.',
+        order: 5,
+        presentBeforeFormSubmit: false
+    }
+}
 
 const textboxStyle = {
     width: '50px'

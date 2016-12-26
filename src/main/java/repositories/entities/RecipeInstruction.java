@@ -27,9 +27,9 @@ public class RecipeInstruction
     {
     }
 
-    public RecipeInstruction(UUID recipeInstructionId, UUID recipeId, int stepNumber, String description)
+    public RecipeInstruction(UUID recipeId, int stepNumber, String description)
     {
-        this.recipeInstructionId = recipeInstructionId;
+        this.recipeInstructionId = UUID.randomUUID();
         this.recipeId = recipeId;
         this.stepNumber = stepNumber;
         this.description = description;

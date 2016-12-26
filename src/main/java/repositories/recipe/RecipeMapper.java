@@ -27,7 +27,6 @@ public class RecipeMapper
                 .ingredients
                 .stream()
                 .map(ingredient -> new RecipeIngredient(
-                    ingredient.recipeIngredientId,
                     ingredient.isRequired,
                     ingredient.quantity,
                     ingredient.quantityUnit,
@@ -41,7 +40,6 @@ public class RecipeMapper
                 .instructions
                 .stream()
                 .map(instruction -> new RecipeInstruction(
-                    instruction.recipeInstructionId,
                     instruction.stepNumber,
                     instruction.description
                 ))
@@ -74,7 +72,6 @@ public class RecipeMapper
                 .getIngredients()
                 .stream()
                 .map(ingredient -> new repositories.entities.RecipeIngredient(
-                    ingredient.getRecipeIngredientId(),
                     recipe.getRecipeId(),
                     ingredient.isRequired(),
                     ingredient.getQuantity(),
@@ -89,7 +86,6 @@ public class RecipeMapper
                 .getInstructions()
                 .stream()
                 .map(instruction -> new repositories.entities.RecipeInstruction(
-                    instruction.getRecipeInstructionId(),
                     recipe.getRecipeId(),
                     instruction.getStepNumber(),
                     instruction.getDescription()

@@ -2,16 +2,11 @@ package aggregates.recipe;
 
 import applicationservices.viewmodels.RecipeIngredientViewModel;
 import ddd.exceptions.IllegalNegativeArgumentForDomainException;
-import ddd.exceptions.IllegalNullArgumentForDomainException;
 import ddd.exceptions.IllegalNullOrEmptyArgumentForDomainException;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.UUID;
-
 public class RecipeIngredient
 {
-    private UUID recipeIngredientId;
-
     private boolean isRequired;
 
     private Double quantity;
@@ -25,11 +20,6 @@ public class RecipeIngredient
     private String preparation;
 
     private Integer orderBy;
-
-    public UUID getRecipeIngredientId()
-    {
-        return recipeIngredientId;
-    }
 
     public boolean isRequired()
     {
@@ -69,7 +59,6 @@ public class RecipeIngredient
     public RecipeIngredient(RecipeIngredientViewModel recipeIngredientViewModel)
     {
         this(
-            UUID.randomUUID(),
             recipeIngredientViewModel.isRequired,
             recipeIngredientViewModel.quantity,
             recipeIngredientViewModel.quantityUnit,
@@ -80,12 +69,8 @@ public class RecipeIngredient
         );
     }
 
-    public RecipeIngredient(UUID recipeIngredientId, boolean isRequired, Double quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
+    public RecipeIngredient(boolean isRequired, Double quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
     {
-        if(recipeIngredientId == null)
-        {
-            throw new IllegalNullArgumentForDomainException("recipeIngredientId");
-        }
         if(quantity != null && quantity < 0)
         {
             throw new IllegalNegativeArgumentForDomainException("quantity");
@@ -95,7 +80,6 @@ public class RecipeIngredient
             throw new IllegalNullOrEmptyArgumentForDomainException("name");
         }
 
-        this.recipeIngredientId = recipeIngredientId;
         this.isRequired = isRequired;
         this.quantity = quantity;
         this.quantityUnit = quantityUnit;
