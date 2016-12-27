@@ -3,8 +3,6 @@ import { Link } from 'react-router'
 import { fetchRecipe } from '../actions'
 import Radium from 'radium'
 
-import InputFraction from './input-fraction'
-
 let store
 let storeUnsubscribe
 let baseStyles
@@ -39,14 +37,15 @@ class Recipe extends React.Component {
         }
 
         let ingredientsList = this.state.recipe.ingredients.map((ing, i) => {
-            let text = (ing.quantityDetail ? ing.quantityDetail + ' ' : '') + 
+            let text = (ing.quantity && ing.quantity !== '1' ? ing.quantity + ' ' : '') +
+                (ing.quantityDetail ? ing.quantityDetail + ' ' : '') + 
                 getQuantityUnit(ing.quantityUnit, ing.quantity) + 
                 ing.name + 
                 (ing.preparation ? ', ' + ing.preparation : '')
             text = text.trim()
             text = text[0].toUpperCase() + text.substring(1)
             return (
-                <li key={i} className="litext"><InputFraction value={ing.quantity} renderAsSpan="true" blankIfOne="true" /> {text}</li>
+                <li key={i} className="litext">{text}</li>
             )
         })
 

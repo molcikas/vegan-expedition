@@ -3,7 +3,7 @@ package repositories.recipe;
 import aggregates.recipe.Recipe;
 import aggregates.recipe.RecipeIngredient;
 import aggregates.recipe.RecipeInstruction;
-import ddd.persistence.UUIDExtensions;
+import org.apache.commons.lang3.math.Fraction;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ public class RecipeMapper
                 .stream()
                 .map(ingredient -> new RecipeIngredient(
                     ingredient.isRequired,
-                    ingredient.quantity,
+                    ingredient.quantity != null ? Fraction.getFraction(ingredient.quantity) : null,
                     ingredient.quantityUnit,
                     ingredient.quantityDetail,
                     ingredient.name,
@@ -74,7 +74,7 @@ public class RecipeMapper
                 .map(ingredient -> new repositories.entities.RecipeIngredient(
                     recipe.getRecipeId(),
                     ingredient.isRequired(),
-                    ingredient.getQuantity(),
+                    ingredient.getQuantity() != null ? ingredient.getQuantity().toProperString() : null,
                     ingredient.getQuantityUnit(),
                     ingredient.getQuantityDetail(),
                     ingredient.getName(),

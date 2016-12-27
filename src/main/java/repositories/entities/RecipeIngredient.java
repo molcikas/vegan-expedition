@@ -21,7 +21,7 @@ public class RecipeIngredient
     public boolean isRequired;
 
     @Column
-    public Double quantity;
+    public String quantity;
 
     @Column
     public String quantityUnit;
@@ -42,7 +42,7 @@ public class RecipeIngredient
     {
     }
 
-    public RecipeIngredient(UUID recipeId, boolean isRequired, Double quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
+    public RecipeIngredient(UUID recipeId, boolean isRequired, String quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
     {
         this.recipeIngredientId = UUID.randomUUID();
         this.recipeId = recipeId;

@@ -7,7 +7,7 @@ public class RecipeIngredientViewModel
 {
     public boolean isRequired;
 
-    public Double quantity;
+    public String quantity;
 
     public String quantityUnit;
 
@@ -24,7 +24,7 @@ public class RecipeIngredientViewModel
     public RecipeIngredientViewModel(RecipeIngredient recipeIngredient)
     {
         this.isRequired = recipeIngredient.isRequired();
-        this.quantity = recipeIngredient.getQuantity();
+        this.quantity = recipeIngredient.getQuantity() != null ? recipeIngredient.getQuantity().toProperString() : "";
         this.quantityUnit = recipeIngredient.getQuantityUnit();
         this.quantityDetail = recipeIngredient.getQuantityDetail();
         this.name = recipeIngredient.getName();

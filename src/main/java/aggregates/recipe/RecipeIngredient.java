@@ -1,15 +1,17 @@
 package aggregates.recipe;
 
 import applicationservices.viewmodels.RecipeIngredientViewModel;
+import ddd.exceptions.IllegalArgumentForDomainException;
 import ddd.exceptions.IllegalNegativeArgumentForDomainException;
 import ddd.exceptions.IllegalNullOrEmptyArgumentForDomainException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.Fraction;
 
 public class RecipeIngredient
 {
     private boolean isRequired;
 
-    private Double quantity;
+    private Fraction quantity;
 
     private String quantityUnit;
 
@@ -26,7 +28,7 @@ public class RecipeIngredient
         return isRequired;
     }
 
-    public Double getQuantity()
+    public Fraction getQuantity()
     {
         return quantity;
     }
@@ -58,9 +60,20 @@ public class RecipeIngredient
 
     public RecipeIngredient(RecipeIngredientViewModel recipeIngredientViewModel)
     {
-        this(
+        Fraction quantityFraction;
+
+        try
+        {
+            quantityFraction = StringUtils.isNotBlank(recipeIngredientViewModel.quantity) ? Fraction.getFraction(recipeIngredientViewModel.quantity) : null;
+        }
+        catch(Exception ex)
+        {
+            throw new IllegalArgumentForDomainException("Invalid fraction for quantity.", ex);
+        }
+
+        construct(
             recipeIngredientViewModel.isRequired,
-            recipeIngredientViewModel.quantity,
+            quantityFraction,
             recipeIngredientViewModel.quantityUnit,
             recipeIngredientViewModel.quantityDetail,
             recipeIngredientViewModel.name,
@@ -69,9 +82,14 @@ public class RecipeIngredient
         );
     }
 
-    public RecipeIngredient(boolean isRequired, Double quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
+    public RecipeIngredient(boolean isRequired, Fraction quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
     {
-        if(quantity != null && quantity < 0)
+        construct(isRequired, quantity, quantityUnit, quantityDetail, name, preparation, orderBy);
+    }
+
+    private void construct(boolean isRequired, Fraction quantity, String quantityUnit, String quantityDetail, String name, String preparation, int orderBy)
+    {
+        if(quantity != null && quantity.floatValue() < 0.0)
         {
             throw new IllegalNegativeArgumentForDomainException("quantity");
         }
