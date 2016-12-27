@@ -4,6 +4,7 @@ import Radium from 'radium'
 
 import { fetchRecipe, addRecipe, updateRecipe } from '../actions'
 import InputNumber from './input-number'
+import IngredientsEdit from './ingredients-edit'
 
 let store
 let storeUnsubscribe
@@ -17,11 +18,8 @@ class RecipeEdit extends React.Component {
 
         this.onStoreChanged = this.onStoreChanged.bind(this)
         this.updateRecipeProperty = this.updateRecipeProperty.bind(this)
-        this.updateIngredient = this.updateIngredient.bind(this)
         this.updateRecipePropertyAndValidity = this.updateRecipePropertyAndValidity.bind(this)
-        this.addIngredient = this.addIngredient.bind(this)
-        this.moveIngredient = this.moveIngredient.bind(this)
-        this.deleteIngredient = this.deleteIngredient.bind(this)
+        this.onIngredientsUpdated = this.onIngredientsUpdated.bind(this)
         this.updateInstruction = this.updateInstruction.bind(this)
         this.addInstruction = this.addInstruction.bind(this)
         this.formSubmitted = this.formSubmitted.bind(this)
@@ -78,43 +76,24 @@ class RecipeEdit extends React.Component {
             delete this.state.errors[updateEvent.name]
         }
         else {
-            this.state.errors[updateEvent.name] = this.state.errors[updateEvent.name] || getErrorMessage(updateEvent.name)
+            this.state.errors[updateEvent.name] = Object.assign(this.state.errors[updateEvent.name] || {}, getErrorMessage(updateEvent.name))
         }
         this.setState(this.state)
     }
 
-    updateIngredient(event) {
-        let index = parseInt(event.target.name.match(indexRegex)[1])
-        let name = event.target.name.substring(event.target.name.indexOf('.') + 1)
-        if(event.target.type === 'checkbox') {
-            this.state.recipe.ingredients[index][name] = !!!this.state.recipe.ingredients[index][name]
-        }
-        else {
-            this.state.recipe.ingredients[index][name] = event.target.value
-        }
-        this.setState(this.state)
-    }
-
-    addIngredient(event) {
-        event.preventDefault()
-        this.state.recipe.ingredients.push({})
-        this.setState(this.state)
-    }
-
-    moveIngredient(event, i, moveUp) {
-        event.preventDefault()
-        if((moveUp && i === 0) || (!moveUp && i === this.state.recipe.ingredients.length - 1)) {
-            return
-        }
-        let ingredient = this.state.recipe.ingredients[i]
-        this.state.recipe.ingredients.splice(i, 1)
-        this.state.recipe.ingredients.splice(moveUp ? i - 1 : i + 1, 0, ingredient)
-        this.setState(this.state)
-    }
-
-    deleteIngredient(event, i) {
-        event.preventDefault()
-        this.state.recipe.ingredients.splice(i, 1)
+    onIngredientsUpdated(ingredients, errors) {
+        this.state.recipe.ingredients = ingredients
+        Object.keys(this.state.errors).forEach(field => {
+            if(this.state.errors[field].isIngredientError && !errors[field]) {
+                delete this.state.errors[field]
+            }
+        })
+        Object.keys(errors).forEach(field => {
+            this.state.errors[field] = Object.assign(this.state.errors[field] || {}, errors[field], { 
+                isIngredientError: true,
+                order: 5
+            })
+        })
         this.setState(this.state)
     }
 
@@ -148,19 +127,19 @@ class RecipeEdit extends React.Component {
 
     validate() {
         if(!this.state.recipe.name) {
-            this.state.errors.name = this.state.errors.name || getErrorMessage('name')
+            this.state.errors.name = Object.assign(this.state.errors.name || {}, getErrorMessage('name'))
         }
         else {
             delete this.state.errors.name
         }
         if(!this.state.recipe.description) {
-            this.state.errors.description = this.state.errors.description || getErrorMessage('description')
+            this.state.errors.description = Object.assign(this.state.errors.description || {}, getErrorMessage('description'))
         }
         else {
             delete this.state.errors.description
         }
         if(this.state.recipe.instructions.filter(ins => ins.description).length === 0) {
-            this.state.errors.instructions = this.state.errors.instructions || getErrorMessage('instructions')
+            this.state.errors.instructions = Object.assign(this.state.errors.instructions || {}, getErrorMessage('instructions'))
         }
         else {
             delete this.state.errors.instructions
@@ -172,40 +151,6 @@ class RecipeEdit extends React.Component {
         if(this.state.recipeFetchState === 'FETCHING') {
             return <div></div>
         }
-
-        let ingredientsList = this.state.recipe.ingredients.map((ing, i) => (
-            <tr key={i}>
-                <td>
-                    <a href="" onClick={(e) => this.moveIngredient(e, i, true)} style={ingredientChangeLinkStyle} title="Move Up">&#8593;</a>
-                    <a href="" onClick={(e) => this.moveIngredient(e, i, false)} style={ingredientChangeLinkStyle} title="Move Down">&#8595;</a>
-                    <a href="" onClick={(e) => this.deleteIngredient(e, i)} style={ingredientChangeLinkStyle} title="Delete">X</a>
-                </td>
-                <td><input type="text" name={`ingredients[${i}].quantity`} value={ing.quantity} onChange={this.updateIngredient} style={textboxStyle} /></td>
-                <td><input type="text" name={`ingredients[${i}].quantityDetail`} value={ing.quantityDetail} onChange={this.updateIngredient} style={textboxStyle} /></td>
-                <td>
-                    <select name={`ingredients[${i}].quantityUnit`} value={ing.quantityUnit} onChange={this.updateIngredient} >
-                        <option></option>
-                        <optgroup label="Measurement Units">
-                            <option>teaspoon</option>
-                            <option>tablespoon</option>
-                            <option>cup</option>
-                            <option>ounce</option>
-                            <option>pound</option>
-                        </optgroup>
-                        <optgroup label="Other Units">
-                            <option>can</option>
-                            <option>jar</option>
-                            <option>head</option>
-                            <option>clove</option>
-                        </optgroup>
-                    </select>
-                </td>
-                <td><input type="text" name={`ingredients[${i}].name`} value={ing.name} onChange={this.updateIngredient} style={{width: '150px'}} /></td>
-                <td><input type="text" name={`ingredients[${i}].preparation`} value={ing.preparation} onChange={this.updateIngredient} style={{width: '100px'}} /></td>
-                <td><input type="checkbox" name="{`ingredients[${i}].required`}" defaultChecked={ing.required} /></td>
-            </tr>
-        ))
-        ingredientsList.push(<tr key={ingredientsList.length}><td colSpan="7"><a href="" onClick={this.addIngredient}>Add Ingredient</a></td></tr>)
 
         let instructionsList = this.state.recipe.instructions.map((ins, i) => 
             <li key={i} className="litext">
@@ -249,22 +194,7 @@ class RecipeEdit extends React.Component {
                     </tbody>
                 </table>
                 <h2>Ingredients</h2>
-                <table id="tblIngredients">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Quantity</th>
-                            <th>Quantity<br />Detail</th>
-                            <th>Unit</th>
-                            <th>Name</th>
-                            <th>Preparation</th>
-                            <th>Required</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {ingredientsList}
-                    </tbody>
-                </table>
+                <IngredientsEdit ingredients={this.state.recipe.ingredients} onIngredientsUpdated={this.onIngredientsUpdated} />
                 <h2>Instructions</h2>
                 <ol>
                     {instructionsList}
@@ -295,43 +225,31 @@ const indexRegex = /\[([0-9]+)\]/
 const errorMessages = {
     name: {
         message: 'A name is required.',
-        order: 0,
-        presentBeforeFormSubmit: false
+        order: 0
     },
     description: {
         message: 'A description is required.',
-        order: 1,
-        presentBeforeFormSubmit: false
+        order: 1
     },
     prepTime: {
         message: 'Prep time must be between 0 and 1000.',
-        order: 2,
-        presentBeforeFormSubmit: false
+        order: 2
     },
     cookTime: {
         message: 'Cook time must be between 0 and 1000.',
-        order: 3,
-        presentBeforeFormSubmit: false
+        order: 3
     },
     servings: {
         message: 'Servings must be between 0 and 1000.',
-        order: 4,
-        presentBeforeFormSubmit: false
+        order: 4
     },
+    // ingredients order: 5
     instructions: {
         message: 'Instructions are required.',
-        order: 5,
-        presentBeforeFormSubmit: false
+        order: 6
     }
 }
 
 const textboxStyle = {
     width: '50px'
-}
-
-const ingredientChangeLinkStyle = {
-    textDecoration: 'none',
-    fontSize: '16pt',
-    paddingRight: '6px',
-    verticalAlign: 'middle'
 }

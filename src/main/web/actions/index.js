@@ -48,7 +48,8 @@ export const addRecipe = (recipe) => {
     return function(dispatch) {
         dispatch({
             type: 'FETCH_RECIPE',
-            state: 'ADDING'
+            state: 'ADDING',
+            recipe: recipe
         })
         fetch(`/api/recipes`, {
             method: 'post',
@@ -76,7 +77,8 @@ export const updateRecipe = (recipe) => {
     return function(dispatch) {
         dispatch({
             type: 'FETCH_RECIPE',
-            state: 'UPDATING'
+            state: 'UPDATING',
+            recipe: recipe
         })
         fetch(`/api/recipes/${recipe.recipeId}`, {
             method: 'put',

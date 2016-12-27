@@ -3,6 +3,8 @@ import { Link } from 'react-router'
 import { fetchRecipe } from '../actions'
 import Radium from 'radium'
 
+import InputFraction from './input-fraction'
+
 let store
 let storeUnsubscribe
 let baseStyles
@@ -37,15 +39,14 @@ class Recipe extends React.Component {
         }
 
         let ingredientsList = this.state.recipe.ingredients.map((ing, i) => {
-            let text = getQuantityString(ing.quantity) +
-                (ing.quantityDetail ? ing.quantityDetail + ' ' : '') + 
+            let text = (ing.quantityDetail ? ing.quantityDetail + ' ' : '') + 
                 getQuantityUnit(ing.quantityUnit, ing.quantity) + 
                 ing.name + 
                 (ing.preparation ? ', ' + ing.preparation : '')
             text = text.trim()
             text = text[0].toUpperCase() + text.substring(1)
             return (
-                <li key={i} className="litext">{text}</li>
+                <li key={i} className="litext"><InputFraction value={ing.quantity} renderAsSpan="true" blankIfOne="true" /> {text}</li>
             )
         })
 
@@ -97,29 +98,6 @@ class Recipe extends React.Component {
 }
 
 export default Radium(Recipe)
-
-function getQuantityString(quantity) {
-    if(!quantity || quantity === 1) {
-        return ''
-    }
-    return quantity
-        .toString()
-        .replace(/[0\.]+$/g, '')
-        .replace('.12', ' 1/8')
-        .replace('.25', ' 1/4')
-        .replace('.33', ' 1/3')
-        .replace('.37', ' 3/8')
-        .replace('.38', ' 3/8')
-        .replace('.5', ' 1/2')
-        .replace('.62', ' 5/8')
-        .replace('.63', ' 5/8')
-        .replace('.66', ' 2/3')
-        .replace('.67', ' 2/3')
-        .replace('.75', ' 3/4')
-        .replace('.87', ' 7/8')
-        .replace('.88', ' 7/8')
-        .replace('0 ', '') + ' '
-}
 
 function getQuantityUnit(quantityUnit, quantity) {
     if(!quantityUnit) {
