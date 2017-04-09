@@ -125,8 +125,7 @@ ol textarea
 #header
 {
 	height: 200px;
-	width: 100%;
-	background: url('../images/banner.png') left center no-repeat;
+	background: url('../images/header-background.png') left top repeat-x;
 	position: relative;
 	-webkit-border-radius: 5px 5px 0 0;
 	-moz-border-radius: 5px 5px 0 0;
@@ -178,13 +177,25 @@ ol textarea
 	text-decoration: underline;
 }
 
-#content
+
+@media (min-width: 700px)
 {
-	background: white;
-	margin: -25px 0 0 255px;
-	padding: 0px 10px 30px 0px;
-	position: relative;
-	z-index: 1;
+	#content
+	{
+		background: white;
+		margin: -25px 0 0 255px;
+		padding: 0px 10px 30px 0px;
+		position: relative;
+		z-index: 1;
+	}
+}
+
+@media (max-width: 699px)
+{
+	#content
+	{
+		padding: 15px 10px 30px 10px;
+	}
 }
 
 #footer

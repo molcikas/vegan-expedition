@@ -13,3 +13,5 @@ hs_err_pid*
 
 /src/main/web/node_modules/*
 /src/main/web/bundle/*
+/src/main/webapp/*
+/.gradle/*

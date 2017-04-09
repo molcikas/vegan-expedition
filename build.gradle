@@ -40,3 +40,21 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
 }
+
+tasks.idea {
+    dependsOn = [ cleanIdeaModule, ideaModule ]
+}
+
+idea {
+    module {
+        iml {
+            beforeMerged { module ->
+                module.dependencies.clear()
+            }
+        }
+		
+		inheritOutputDirs = false
+		outputDir = file('./classes/production')
+		testOutputDir = file('./classes/test')
+    }
+}

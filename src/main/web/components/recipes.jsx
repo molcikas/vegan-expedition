@@ -59,7 +59,7 @@ class Recipes extends React.Component {
 
         return (
             <div>
-                <table>
+                <table style={{width: '100%'}}>
                     <thead>
                         <tr>
                             <th>Recipe</th>

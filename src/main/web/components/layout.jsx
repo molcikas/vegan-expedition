@@ -1,11 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router'
 
+const headerImage = require('../images/vegan-expedition.png');
+
 class Layout extends React.Component {
     render() {
         return (
             <div id="page-container">
 	            <div id="header">
+					<img src="images/vegan-expedition.png" />
 		            <div id="menu-bar">
 			            <div id="menu">
 				            <ul>
