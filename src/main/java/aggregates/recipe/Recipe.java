@@ -99,6 +99,10 @@ public class Recipe extends AggregateRoot
         return Collections.unmodifiableList(instructions);
     }
 
+    private Recipe()
+    {
+    }
+
     public Recipe(RecipeViewModel recipeViewModel)
     {
         this(

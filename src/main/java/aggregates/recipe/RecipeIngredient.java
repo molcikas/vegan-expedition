@@ -58,6 +58,10 @@ public class RecipeIngredient
         return orderBy;
     }
 
+    private RecipeIngredient()
+    {
+    }
+
     public RecipeIngredient(RecipeIngredientViewModel recipeIngredientViewModel)
     {
         Fraction quantityFraction;

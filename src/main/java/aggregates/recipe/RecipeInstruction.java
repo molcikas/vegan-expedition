@@ -21,6 +21,10 @@ public class RecipeInstruction
         return description;
     }
 
+    private RecipeInstruction()
+    {
+    }
+
     public RecipeInstruction(RecipeInstructionViewModel recipeInstructionViewModel)
     {
         this(
