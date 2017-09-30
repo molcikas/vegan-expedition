@@ -27,6 +27,8 @@ public class RecipeViewModel
 
     public boolean isPublished;
 
+    public Integer points;
+
     public String credit;
 
     public List<RecipeIngredientViewModel> ingredients;
@@ -50,6 +52,7 @@ public class RecipeViewModel
         this.isVegetarian = recipe.isVegetarian();
         this.isVegan = recipe.isVegan();
         this.isPublished = recipe.isPublished();
+        this.points = recipe.getPoints();
         this.credit = recipe.getCredit();
 
         this.ingredients = recipe

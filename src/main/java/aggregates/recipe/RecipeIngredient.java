@@ -4,59 +4,32 @@ import applicationservices.viewmodels.RecipeIngredientViewModel;
 import ddd.exceptions.IllegalArgumentForDomainException;
 import ddd.exceptions.IllegalNegativeArgumentForDomainException;
 import ddd.exceptions.IllegalNullOrEmptyArgumentForDomainException;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.Fraction;
 
 public class RecipeIngredient
 {
+    @Getter
     private boolean isRequired;
 
+    @Getter
     private Fraction quantity;
 
+    @Getter
     private String quantityUnit;
 
+    @Getter
     private String quantityDetail;
 
+    @Getter
     private String name;
 
+    @Getter
     private String preparation;
 
+    @Getter
     private Integer orderBy;
-
-    public boolean isRequired()
-    {
-        return isRequired;
-    }
-
-    public Fraction getQuantity()
-    {
-        return quantity;
-    }
-
-    public String getQuantityUnit()
-    {
-        return quantityUnit;
-    }
-
-    public String getQuantityDetail()
-    {
-        return quantityDetail;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public String getPreparation()
-    {
-        return preparation;
-    }
-
-    public Integer getOrderBy()
-    {
-        return orderBy;
-    }
 
     private RecipeIngredient()
     {

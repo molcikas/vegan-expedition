@@ -5,21 +5,24 @@ import aggregates.recipe.RecipeIngredient;
 import aggregates.recipe.RecipeInstruction;
 import applicationservices.RecipeAppService;
 import applicationservices.RecipeAppServiceImpl;
+import com.github.molcikas.photon.blueprints.table.ColumnDataType;
+import com.github.molcikas.photon.options.DefaultTableName;
+import com.github.molcikas.photon.options.PhotonOptions;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import ddd.domainevents.DomainEventsRegistration;
 import ddd.domainevents.DomainEventsRegistrationImpl;
 import ddd.persistence.UnitOfWorkFactory;
 import applicationservices.UnitOfWorkFactoryImpl;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.EagerLoad;
 import org.apache.tapestry5.ioc.annotations.Symbol;
-import photon.Photon;
+import com.github.molcikas.photon.Photon;
 import webapi.RecipeResource;
 import webapi.RecipeResourceImpl;
-
-import java.sql.Types;
 
 public class VeganExpeditionModule
 {
@@ -45,11 +48,15 @@ public class VeganExpeditionModule
         binder.bind(RecipeResource.class, RecipeResourceImpl.class);
     }
 
+    @SneakyThrows
+    @EagerLoad
     public static Photon buildPhoton(
         @Symbol(Symbols.DATABASE_URL) String databaseUrl,
         @Symbol(Symbols.DATABASE_USER) String databaseUser,
         @Symbol(Symbols.DATABASE_PASSWORD) String databasePassword)
     {
+        Class.forName("com.mysql.jdbc.Driver");
+
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(databaseUrl);
         hikariConfig.setUsername(databaseUser);
@@ -58,26 +65,31 @@ public class VeganExpeditionModule
         hikariConfig.addDataSourceProperty("prepStmtCacheSize", "250");
         hikariConfig.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
 
-        Photon photon = new Photon(new HikariDataSource(hikariConfig));
+        PhotonOptions photonOptions = new PhotonOptions(
+            null,
+            null,
+            DefaultTableName.ClassNameLowerCase,
+            null,
+            null);
+
+        Photon photon = new Photon(new HikariDataSource(hikariConfig), photonOptions);
 
         photon.registerAggregate(Recipe.class)
             .withId("recipeId")
-            .withOrderBy("name")
-            .withChild(RecipeInstruction.class)
-                .withId("recipeInstructionId")
-                .withColumnDataType("recipeInstructionId", Types.BINARY)
+            .withOrderBySql("recipe.name")
+            .withChild("instructions", RecipeInstruction.class)
+                .withId("recipeInstructionId", ColumnDataType.BINARY)
+                .withForeignKeyToParent("recipeId", ColumnDataType.BINARY)
+                .withOrderBySql("recipeinstruction.stepNumber")
+                .addAsChild()
+            .withChild("ingredients", RecipeIngredient.class)
+                .withId("recipeIngredientId", ColumnDataType.BINARY)
                 .withForeignKeyToParent("recipeId")
-                .withColumnDataType("recipeId", Types.BINARY)
-                .withOrderBy("stepNumber")
-                .addAsChild("instructions")
-            .withChild(RecipeIngredient.class)
-                .withId("recipeIngredientId")
-                .withColumnDataType("recipeIngredientId", Types.BINARY)
-                .withForeignKeyToParent("recipeId")
-                .withColumnDataType("recipeId", Types.BINARY)
-                .withColumnDataType("quantity", Types.VARCHAR)
-                .withCustomToFieldValueConverter("quantity", val -> val != null ? Fraction.getFraction((String) val) : null)
-                .addAsChild("ingredients")
+                .withDatabaseColumn("recipeId", ColumnDataType.BINARY)
+                .withDatabaseColumn("quantity", ColumnDataType.VARCHAR)
+                .withFieldHydrater("quantity", val -> val != null ? Fraction.getFraction((String) val) : null)
+                .withOrderBySql("recipeingredient.orderBy")
+                .addAsChild()
             .register();
 
         return photon;

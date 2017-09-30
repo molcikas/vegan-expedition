@@ -123,7 +123,7 @@ class IngredientsEdit extends React.Component {
                 </td>
                 <td><input type="text" name={`ingredients[${i}].name`} value={ing.name} onChange={this.updateIngredient} style={{width: '150px'}} /></td>
                 <td><input type="text" name={`ingredients[${i}].preparation`} value={ing.preparation} onChange={this.updateIngredient} style={{width: '100px'}} /></td>
-                <td><input type="checkbox" name="{`ingredients[${i}].required`}" defaultChecked={ing.required} /></td>
+                <td><input type="checkbox" name={`ingredients[${i}].isRequired`} defaultChecked={ing.isRequired} onChange={this.updateIngredient} /></td>
             </tr>
         ))
         ingredientsList.push(<tr key={ingredientsList.length}><td colSpan="7"><a href="" onClick={this.addIngredient}>Add Ingredient</a></td></tr>)

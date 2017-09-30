@@ -29,6 +29,9 @@ class InputNumber extends React.Component {
 	}
 
 	isValueValid(value) {
+	    if(!this.props.required && value === '') {
+	        return true
+	    }
 		const intValue = parseInt(value)
 		return !isNaN(intValue) && intValue == value && intValue >= parseInt(this.props.min) && intValue <= parseInt(this.props.max)
 	}
@@ -44,7 +47,14 @@ class InputNumber extends React.Component {
 			/>
         )
     }
+}
 
+InputNumber.propTypes = {
+    required: React.PropTypes.bool
+}
+
+InputNumber.defaultProps = {
+    required: true
 }
 
 export default InputNumber

@@ -4,7 +4,7 @@ import ddd.domainevents.DomainEventsRegistration;
 import ddd.persistence.PhotonTransactionContainer;
 import ddd.persistence.UnitOfWork;
 import ddd.persistence.UnitOfWorkFactory;
-import photon.Photon;
+import com.github.molcikas.photon.Photon;
 
 import javax.inject.Inject;
 

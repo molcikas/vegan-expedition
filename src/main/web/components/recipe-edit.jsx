@@ -172,24 +172,28 @@ class RecipeEdit extends React.Component {
                 <table id="tblStats">
                     <tbody>
                         <tr>
-                            <th><label htmlFor="PrepTime">Prep Time</label>:</th>
+                            <th><label htmlFor="prepTime">Prep Time</label>:</th>
                             <td><InputNumber name="prepTime" value={this.state.recipe.prepTime} style={textboxStyle} min="0" max="1000" onChange={this.updateRecipePropertyAndValidity} /> minutes</td>
                         </tr>
                         <tr>
-                            <th><label htmlFor="CookTime">Cook Time</label>:</th>
+                            <th><label htmlFor="cookTime">Cook Time</label>:</th>
                             <td><InputNumber name="cookTime" value={this.state.recipe.cookTime} style={textboxStyle} min="0" max="1000" onChange={this.updateRecipePropertyAndValidity} /> minutes</td>
                         </tr>
                         <tr>
-                            <th><label htmlFor="Servings">Servings</label>:</th>
+                            <th><label htmlFor="servings">Servings</label>:</th>
                             <td><InputNumber name="servings" value={this.state.recipe.servings} style={textboxStyle} min="0" max="1000" onChange={this.updateRecipePropertyAndValidity} /></td>
                         </tr>
                         <tr>
-                            <th><label htmlFor="IsVegetarian">Vegetarian?</label></th>
+                            <th><label htmlFor="isVegetarian">Vegetarian?</label></th>
                             <td><input type="checkbox" name="isVegetarian" checked={this.state.recipe.isVegetarian} min="0" max="1000" onChange={this.updateRecipeProperty} /></td>
                         </tr>
                         <tr>
-                            <th><label htmlFor="IsVegan">Vegan?</label></th>
+                            <th><label htmlFor="isVegan">Vegan?</label></th>
                             <td><input type="checkbox" name="isVegan" checked={this.state.recipe.isVegan} min="0" max="1000" onChange={this.updateRecipeProperty} /></td>
+                        </tr>
+                        <tr>
+                            <th><label htmlFor="points">Points</label></th>
+                            <td><InputNumber name="points" value={this.state.recipe.points} style={textboxStyle} min="-1000" max="1000" onChange={this.updateRecipePropertyAndValidity} required={false} /></td>
                         </tr>
                     </tbody>
                 </table>
@@ -253,3 +257,9 @@ const errorMessages = {
 const textboxStyle = {
     width: '50px'
 }
+
+/*
+<pre>
+    {JSON.stringify(this.state, null, 2)}
+</pre>
+*/

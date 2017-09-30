@@ -55,16 +55,16 @@ class Recipe extends React.Component {
 
         return (
             <div>
-                <h1>{this.state.recipe.name}</h1>
+                <h1>{this.state.recipe.name} <Link to={`/recipes/${this.state.recipe.recipeId}/edit`} style={ingredientChangeLinkStyle}>&#8601;</Link></h1>
                 <span id="lblDescription">{this.state.recipe.description}</span>
                 <table id="tblStats">
                     <tbody>
                         <tr>
-                            <th><label htmlFor="PrepTime">Prep Time</label>:</th>
+                            <th>Prep Time:</th>
                             <td>{this.state.recipe.prepTime} minutes</td>
                         </tr>
                         <tr>
-                            <th><label htmlFor="CookTime">Cook Time</label>:</th>
+                            <th>Cook Time:</th>
                             <td>{this.state.recipe.cookTime} minutes</td>
                         </tr>
                         <tr>
@@ -72,16 +72,20 @@ class Recipe extends React.Component {
                             <td>{this.state.recipe.prepTime + this.state.recipe.cookTime} minutes</td>
                         </tr>
                         <tr>
-                            <th><label htmlFor="Servings">Servings</label>:</th>
+                            <th>Servings:</th>
                             <td>{this.state.recipe.servings}</td>
                         </tr>
                         <tr>
-                            <th><label htmlFor="IsVegetarian">Vegetarian?</label></th>
+                            <th>Vegetarian?</th>
                             <td>{this.state.recipe.isVegetarian ? 'Yes' : 'No'}</td>
                         </tr>
                         <tr>
-                            <th><label htmlFor="IsVegan">Vegan?</label></th>
+                            <th>Vegan?</th>
                             <td>{this.state.recipe.isVegan ? 'Yes' : 'No'}</td>
+                        </tr>
+                        <tr>
+                            <th>Points</th>
+                            <td>{this.state.recipe.points}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -96,11 +100,18 @@ class Recipe extends React.Component {
     }
 }
 
-export default Radium(Recipe)
-
 function getQuantityUnit(quantityUnit, quantity) {
     if(!quantityUnit) {
         return ''
     }
     return quantity >= 0 && quantity <= 1 ? quantityUnit + ' ' : quantityUnit + 's '
 }
+
+const ingredientChangeLinkStyle = {
+    textDecoration: 'none',
+    fontSize: '16pt',
+    paddingLeft: '6px',
+    verticalAlign: 'middle'
+}
+
+export default Radium(Recipe)

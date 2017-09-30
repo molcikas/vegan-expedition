@@ -1,11 +1,11 @@
 package ddd.persistence;
 
-import photon.Photon;
-import photon.PhotonConnection;
+import com.github.molcikas.photon.Photon;
+import com.github.molcikas.photon.PhotonTransaction;
 
 public class PhotonTransactionContainer implements TransactionContainer
 {
-    private final PhotonConnection photonConnection;
+    private final PhotonTransaction photonTransaction;
 
     /**
      * Call this in the repository constructor get retrieve the PhotonConnection object, then use it to perform queries. DO
@@ -13,9 +13,9 @@ public class PhotonTransactionContainer implements TransactionContainer
      *
      * @return
      */
-    public PhotonConnection getPhotonConnection()
+    public PhotonTransaction getPhotonTransaction()
     {
-        return photonConnection;
+        return photonTransaction;
     }
 
     public PhotonTransactionContainer(Photon photon)
@@ -24,22 +24,22 @@ public class PhotonTransactionContainer implements TransactionContainer
         {
             throw new IllegalArgumentException("photon cannot be null.");
         }
-        this.photonConnection = photon.beginTransaction();
+        this.photonTransaction = photon.beginTransaction();
     }
 
     @Override
     public void commit()
     {
-        photonConnection.commit();
+        photonTransaction.commit();
     }
 
     @Override
     public void close()
     {
-        if(photonConnection.isOpen())
+        if(photonTransaction.hasUncommittedChanges())
         {
-            photonConnection.rollbackTransaction();
+            photonTransaction.rollback();
         }
-        photonConnection.close();
+        photonTransaction.close();
     }
 }
